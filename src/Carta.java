@@ -1,7 +1,7 @@
 public class Carta {
 // Declara os atributos da classe Carta, que são o valor e o naipe da carta
-    private String valor;
-    private String naipe;
+    private final String valor;
+    private final String naipe;
 
     //Função para criar a carta, valor e naipe como parametros
     public Carta(String valor, String naipe) {
@@ -10,6 +10,7 @@ public class Carta {
     }
 
     // Retorna o valor e o naipe da carta em uma String
+    @Override
     public String toString() {
         return valor + " de " + naipe;
     }

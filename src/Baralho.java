@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Baralho {
   //Lista que armazenará as cartas do baralho, armazena apenas objetos do tipo Carta, declara essa lista como "cartas"
-  private List<Carta> cartas;
+  private final List<Carta> cartas;
 
   //Função que irá construir o baralho 
     public Baralho() {
@@ -37,4 +37,5 @@ public void mostrarCartas() {
   public void embaralhar() {
         Collections.shuffle(cartas);
     }
+
 }
