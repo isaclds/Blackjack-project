@@ -11,7 +11,7 @@ public class Baralho {
     public Baralho() {
       //Variavel cartas vira uma arraylist que irá armazenar as cartas do baralho
         cartas = new ArrayList<>();
-        //Cria o baralho chamando a função criarBaralho
+        //Cria o bardistribuirCartaalho chamando a função criarBaralho
         criarBaralho();
     }
 
@@ -37,5 +37,14 @@ public void mostrarCartas() {
   public void embaralhar() {
         Collections.shuffle(cartas);
     }
+
+//Distribuir as cartas
+  public Carta selecionarCarta() {
+    if (cartas.isEmpty()) {
+        throw new IllegalStateException("O baralho está vazio!");
+    }
+    //Remove a carta e mostra ela
+    return cartas.remove(0); 
+}
 
 }

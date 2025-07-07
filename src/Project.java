@@ -1,4 +1,7 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+
 
 public class Project {
         public static void main(String[] args) {
@@ -19,7 +22,21 @@ public class Project {
                     double banca = scan.nextDouble();
                 //Embaralhar o baralho
                     baralho.embaralhar();
-                //Selecionar a carta do baralho 
+                //Criar o armazenamento das cartas futuras
+                List<Carta> maoJogador = new ArrayList<>();
+                List<Carta> maoDealer = new ArrayList<>();
+                //Quanto o jogador deseja apostar e comparar com a banca inicial
+
+                //Distribuir as cartas
+                maoJogador.add(baralho.selecionarCarta());
+                maoDealer.add(baralho.selecionarCarta());
+                maoJogador.add(baralho.selecionarCarta());
+                maoDealer.add(baralho.selecionarCarta());
+                //Mostrar carta
+                System.out.printf("Sua mão é %s e %s\n", maoJogador.get(0), maoJogador.get(1));
+                //Mostra a primeira carta do dealer
+                System.out.printf("A primeira carta do dealer é: %s\n", maoDealer);
+            
 
                     break;
                 case 2:
@@ -27,6 +44,5 @@ public class Project {
                 default:
                     throw new Error("Não foi possível encontrar essa opção.");
             }
-          
         }
     }
