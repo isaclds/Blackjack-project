@@ -7,7 +7,8 @@ public class Project {
     private static double banca;
     private static double bancaComp;
     private static double aposta;
-    private static boolean continuarJogando = true;
+    private static boolean dobrou;
+    private static boolean continuarJogando;
     private static int pontosJogador;
     private static int pontosDealer;
 
@@ -36,6 +37,7 @@ public class Project {
               System.out.println("Insira o valor da sua banca!");
               banca = scan.nextDouble();
               bancaComp = banca;
+              continuarJogando = true;
               //Embaralhar o baralho
                 while(continuarJogando){
                     rodada();
@@ -66,6 +68,9 @@ public class Project {
         List<Carta> maoJogador = new ArrayList<>();
         List<Carta> maoDealer = new ArrayList<>();
 
+        //Setando para false para inicio de cada rodada
+        dobrou = false;
+
         //Valor da aposta sempre setado em 0 no inicio da função para evitar futuros bugs de apostas não zeradas
         aposta = 0;
         aposta = apostar();
@@ -94,35 +99,127 @@ public class Project {
 
     }
 
-    private static double apostar(){
-        boolean apostaValida = false;
+    private static void decisaoRodada(List<Carta> maoJogador, List<Carta> maoDealer){
+        List<Carta> mJogador = maoJogador;
+        List<Carta> mDealer = maoDealer;
+        //Verificar se o dealer já tem 17 pontos, se ele não tiver ele é obrigado a chegar no minimo a 17
+
+        //Criação do menu por conta do dobrar que só pode aparecer na primeira vez
+        StringBuilder menu = new StringBuilder();
+        menu.append("Qual dessas opções você deseja realizar?\n");
+        menu.append("1 - Comprar mais uma carta.\n");
+
+        //Compara com o tamanho da mão do jogador, se ela tiver só duas cartas o que acarreta em ser a primeira vez que esteja funcionando aparece a opção dobrar
+        if(!dobrou && mJogador.size() == 2){
+            menu.append("2 - Dobrar a aposta(comprando apenas mais uma carta).\n");
+        }
+        menu.append("3 - Parar.\n");
+        menu.append("4 - Desistir(perde metade da aposta).\n");
+
+        System.out.println(menu.toString());
+
         
-        //Lop para checagem se a aposta é válida ou não, reutilizado durante o projeto
-        while (!apostaValida) {
-            System.out.println("Quanto deseja apostar?");
-            aposta = scan.nextDouble();
-            
-            if (aposta > banca) {
-                System.out.printf("Saldo insuficiente! Banca atual: R$%.2f\n", banca);
-            } else if (aposta <= 0) {
-                System.out.println("Valor deve ser positivo!");
-            } else {
-                System.out.println("Bom jogo!");
-                apostaValida = true;
+        int escolha = scan.nextInt();
+        switch(escolha){
+            case 1 ->{
+                //Verifica se o dealer já tem 17 pontos, se não ele compra uma carta e atualiza a contagem de pontos
+                if(pontosDealer < 17){
+                    comprarCarta(mDealer);
+                    pontosDealer = calculadoraPontos(mDealer);
+                    //Mostra a carta que o dealer comprou
+                    int indexD = mDealer.size() - 1;
+                    System.out.printf("O dealer agora tem %s, totalizando %d pontos\n", mDealer.get(indexD), pontosDealer);
+                }
+                comprarCarta(mJogador);
+                pontosJogador = calculadoraPontos(mJogador);
+                
+                int indexJ = mJogador.size() - 1;
+                System.out.printf("Sua mão agora tem %s e você tem %d pontos\n", mJogador.get(indexJ), pontosJogador);
+
+                //Verifica se alguém estourou os pontos ou igualou 21 e puxa a função 
+                if((pontosDealer >= 21) || (pontosJogador >= 21)){
+                    comparadorDecisor();
+                }
+                decisaoRodada(mJogador, mDealer);
+            }
+            case 2 ->{
+                if(dobrou || mJogador.size() != 2){
+                    System.out.println("Você só pode dobrar na primeira rodada!");
+                    decisaoRodada(mJogador, mDealer);
+                } else if(0 > (banca -= aposta)){
+                    System.out.printf("Você não pode dobrar, sua banca ficaria menor que zero!\n");
+                    //Forma para que o jogador não possa tentar dobrar novamente
+                    dobrou = true;
+                    decisaoRodada(mJogador, mDealer);
+                }
+
+                dobrou = true;
+                banca -= aposta; //Diminui o valor dobrado da aposta
+                aposta *= 2; //Dobra a aposta
+
+                //Verifica se o dealer já tem 17 pontos, se não ele compra uma carta e atualiza a contagem de pontos
+                if(pontosDealer < 17){
+                    comprarCarta(mDealer);
+                    pontosDealer = calculadoraPontos(mDealer);
+                }
+
+                comprarCarta(mJogador);
+                pontosJogador = calculadoraPontos(maoJogador);
+                int index = mJogador.size() - 1;
+                System.out.printf("Sua mão agora tem %s\n", mJogador.get(index));
+
+                //Dealer continua até ter 17 pontos ou mais
+                while(pontosDealer < 17){
+                    comprarCarta(mDealer);
+                    pontosDealer = calculadoraPontos(mDealer);
+                }
+
+                comparadorDecisor();
+
+            }
+            case 3 ->{
+                while(pontosDealer < 17){
+                    comprarCarta(mDealer);
+                    pontosDealer = calculadoraPontos(mDealer);
+                }
+                System.out.println("Você decidiu parar!");
+                comparadorDecisor();
+            }
+            case 4 ->{
+                System.out.println("Você desistiu e recuperou metade da aposta!");
+                banca += aposta / 2;
+                continuarJogo();
+            }
+            default ->{
+                System.out.println("Nenhuma das opções disponiveis! Selecione alguma das opções disponiveis.");
+                decisaoRodada(mJogador, mDealer);
             }
         }
-        return aposta;
     }
 
-    // private static void distribuirCartas(List<Carta> maoJogador, List<Carta> maoDealer){
-    //     maoJogador.add(baralho.selecionarCarta());
-    //     maoDealer.add(baralho.selecionarCarta());
-    //     maoJogador.add(baralho.selecionarCarta());
-    //     maoDealer.add(baralho.selecionarCarta());
-    // }
-
-     private static void comprarCarta(List<Carta> mao){
-        mao.add(baralho.selecionarCarta());
+    //Função comparadora e verificar possivel vencedor
+    private static void comparadorDecisor() {
+        //Ambos estouram
+        if(pontosJogador>21 & pontosDealer>21){
+            System.out.println("Ambos estouraram 21 pontos! O Dealer ganha por padrão.");
+            continuarJogo();
+        } else if(pontosJogador > 21){ //Jogador estoura
+            System.out.println("Você estourou a quantidade de pontos!");
+            continuarJogo();
+        } else if(pontosDealer > 21) { //Dealer estoura
+            System.out.println("O Dealer estourou a quantidade de pontos! Você ganhou!");
+            banca = banca + (aposta * 2);
+            continuarJogo();
+        }  else if (pontosJogador == pontosDealer) { //Empate
+            empate();
+        } else if (pontosJogador>pontosDealer) { //Jogador mais pontos que o dealer
+            System.out.printf("Você ganhou! Você fez %d pontos e o Dealer fez %d pontos.", pontosJogador, pontosDealer);
+            banca = banca + (aposta * 2);
+            continuarJogo();
+        } else { // Dealer fez mais pontos
+            System.out.printf("O Dealer ganhou. Você fez %d pontos e o Dealer fez %d pontos.", pontosJogador, pontosDealer);
+            continuarJogo(); 
+        }
     }
 
     private static int calculadoraPontos(List<Carta> mao){
@@ -162,6 +259,30 @@ public class Project {
         return pontos;
     }
 
+    private static double apostar(){
+        boolean apostaValida = false;
+        
+        //Lop para checagem se a aposta é válida ou não, reutilizado durante o projeto
+        while (!apostaValida) {
+            System.out.println("Quanto deseja apostar?");
+            aposta = scan.nextDouble();
+            
+            if (aposta > banca) {
+                System.out.printf("Saldo insuficiente! Banca atual: R$%.2f\n", banca);
+            } else if (aposta <= 0) {
+                System.out.println("Valor deve ser positivo!");
+            } else {
+                System.out.println("Bom jogo!");
+                apostaValida = true;
+            }
+        }
+        return aposta;
+    }
+
+     private static void comprarCarta(List<Carta> mao){
+        mao.add(baralho.selecionarCarta());
+    }
+
     private static void verificarVencedorPorVU(int pontosJogador, int pontosDealer){
         //Ver se empatou em 21, caso sim valor da aposta volta para a banca
         if((pontosJogador == 21) && (pontosDealer == 21)){
@@ -197,61 +318,6 @@ public class Project {
             }
     }
 
-    private static void decisaoRodada(List<Carta> maoJogador, List<Carta> maoDealer){
-        //Verificar se o dealer já tem 17 pontos, se ele não tiver ele é obrigado a chegar no minimo a 17
-        //Preciso mexer nesse loop por conta dq o dealer pode comprar mtas cartas e estourar antes do jogador
-        while(pontosDealer < 17){
-            comprarCarta(maoDealer);
-            pontosDealer = calculadoraPontos(maoDealer);
-        }
-
-        System.out.println("Qual dessas opções você deseja realizar?:\n 1 - Comprar mais uma carta.\n 2 - Dobrar a aposta(comprando apenas mais uma carta).\n 3 - Parar.\n 4- Desistir(perde metade da aposta).");
-        int escolha = scan.nextInt();
-        switch(escolha){
-            case 1 ->{
-                comprarCarta(maoJogador);
-                pontosJogador = calculadoraPontos(maoJogador);
-                //Mostrar a ultima carta que o jogador tirou
-                int index = maoJogador.size() - 1;
-                System.out.printf("Sua mão agora tem %s\n", maoJogador.get(index));
-                comparadorDecisor();
-            }
-        }
-        //Mais cartas
-
-        //Desistir
-
-        //Dobrar
-
-        //Parar
-
-    }
-
-    //Função comparadora e verificar possivel vencedor
-    private static void comparadorDecisor() {
-        //Ambos estouram
-        if(pontosJogador>21 & pontosDealer>21){
-            System.out.println("Ambos estouraram 21 pontos! O Dealer ganha por padrão.");
-            continuarJogo();
-        } else if(pontosJogador > 21){ //Jogador estoura
-            System.out.println("Você estourou a quantidade de pontos!");
-            continuarJogo();
-        } else if(pontosDealer > 21) { //Dealer estoura
-            System.out.println("O Dealer estourou a quantidade de pontos! Você ganhou!");
-            banca = banca + (aposta * 2);
-            continuarJogo();
-        }  else if (pontosJogador == pontosDealer) { //Empate
-            empate();
-        } else if (pontosJogador>pontosDealer) { //Jogador mais pontos que o dealer
-            System.out.printf("Você ganhou! Você fez %d pontos e o Dealer fez %d pontos.", pontosJogador, pontosDealer);
-            banca = banca + (aposta * 2);
-            continuarJogo();
-        } else { // Dealer fez mais pontos
-            System.out.printf("O Dealer ganhou. Você fez %d pontos e o Dealer fez %d pontos.", pontosJogador, pontosDealer);
-            continuarJogo(); 
-        }
-    }
-
 //Situações de pontos
 
     private static void empate(){
@@ -262,19 +328,4 @@ public class Project {
         //Verifica se o jogador deseja continuar jogando
          continuarJogo();
     }
-
-    // if(pontosDealer>pontosJogador){
-            
-    //         System.out.println("O Dealer ganhou. Mais sorte da próxima vez!");
-    //         continuarJogo();
-
-    //     } else if(pontosDealer<pontosJogador){
-    //         System.out.println("Você ganhou! Parabéns!");
-    //         banca = banca + (aposta * 2);
-    //         continuarJogo();
-
-    //     }
-
-    //Melhorar o verificar vencedor, para situações que ninguem tenha atingido 21, esse tipo de coisa
-    //Lembrar dq o dealer sempre ira trazer mais cartas até que ele some 17 pontos. As coisas tem que acontecer ao mesmo tempo
 }
