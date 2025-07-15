@@ -38,13 +38,13 @@ public class Project {
               banca = scan.nextDouble();
               bancaComp = banca;
               continuarJogando = true;
-              //Embaralhar o baralho
+                //Enquanto o jogador quiser continuar jogando, o jogo roda
                 while(continuarJogando){
                     rodada();
                     }
                  }
             case 2 -> {
-                System.out.println("Volte sempre!");
+                continuarJogando = false;
             }
             default ->{
                 System.out.println("Não foi possível encontrar essa opção. Tente novamente!");
@@ -56,6 +56,7 @@ public class Project {
      private static void fimDeJogo() {
 
          System.out.println("Volte sempre!");
+         scan.close();
          if(banca>bancaComp){
             System.out.printf("Você ganhou R$%.2f!\n", banca-bancaComp);
          }
@@ -68,7 +69,9 @@ public class Project {
         List<Carta> maoJogador = new ArrayList<>();
         List<Carta> maoDealer = new ArrayList<>();
 
-        //Setando para false para inicio de cada rodada
+        //Setando caracteristicas iniciais 
+        pontosDealer = 0;
+        pontosJogador = 0;
         dobrou = false;
 
         //Valor da aposta sempre setado em 0 no inicio da função para evitar futuros bugs de apostas não zeradas
@@ -120,6 +123,7 @@ public class Project {
 
         
         int escolha = scan.nextInt();
+        scan.nextLine(); //Limpa o buffer do scanner
         switch(escolha){
             case 1 ->{
                 //Verifica se o dealer já tem 17 pontos, se não ele compra uma carta e atualiza a contagem de pontos
@@ -140,7 +144,11 @@ public class Project {
                 if((pontosDealer >= 21) || (pontosJogador >= 21)){
                     comparadorDecisor();
                 }
-                decisaoRodada(mJogador, mDealer);
+                if(pontosJogador < 21 && pontosDealer < 21){
+                    //Se ninguém estourou os pontos, chama a função de decisão novamente
+                    decisaoRodada(mJogador, mDealer);
+                }
+                
             }
             case 2 ->{
                 if(dobrou || mJogador.size() != 2){
@@ -178,7 +186,7 @@ public class Project {
 
             }
             case 3 ->{
-                while(pontosDealer < 17){
+                while((pontosDealer < pontosJogador ) && (pontosDealer < 17)){
                     comprarCarta(mDealer);
                     pontosDealer = calculadoraPontos(mDealer);
                 }
@@ -304,17 +312,23 @@ public class Project {
     private static void continuarJogo(){
          System.out.println("Deseja continuar jogando? \n 1 - Sim\n 2 - Não");
             int escolha = scan.nextInt();
+            scan.nextLine();
             switch(escolha){
                 case 1 -> {
-                System.out.printf("Sua banca atual é de R$: %.2f!\n", banca);
-            }
-            case 2 -> {
-                continuarJogando = false;
-            }
-            default -> {
-                System.out.println("Opção inválida! Tente novamente.");
-                continuarJogo();
-            }
+                    if(banca <= 0) {
+                        System.out.println("Sua banca está zerada. O jogo acabou!");
+                         continuarJogando = false;
+                } else {
+                    System.out.printf("Sua banca atual é de R$: %.2f!\n", banca);
+                }
+                }
+                case 2 -> {
+                    continuarJogando = false;
+                }
+                default -> {
+                    System.out.println("Opção inválida! Tente novamente.");
+                    continuarJogo();
+                }
             }
     }
 
