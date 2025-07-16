@@ -1,6 +1,6 @@
 # Blackjack (21) - Java Terminal game
 
-Jogo de **Blackjack** desenvolvido em **Java**, utilizando progamação orientada a objeto (POO) e lógica de jogo interativa no terminal para facilitar a interação. Projeto produzido durante a 1° fase do curso de Análise e Desenvolvimento de Sistemas no IFSC, para a matéria de Pensamento Computacional e Algoritmos, sob orientação do Professor e Doutor [Ramon Mayor Martins](https://github.com/rmayormartins).
+Jogo de **Blackjack** desenvolvido em **Java**, utilizando progamação orientada a objeto (POO) e lógica de jogo interativa no terminal para facilitar a interação. Projeto produzido durante a 1° fase do curso de Análise e Desenvolvimento de Sistemas no IFSC, para a matéria de Pensamento Computacional e Algoritmos, sob orientação do Doutor e Professor [Ramon Mayor Martins](https://github.com/rmayormartins).
 
 ## Funcionalidades
 
