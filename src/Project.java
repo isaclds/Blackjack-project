@@ -117,7 +117,7 @@ public class Project {
             menu.append("2 - Dobrar a aposta(comprando apenas mais uma carta).\n");
         }
         menu.append("3 - Parar.\n");
-        menu.append("4 - Desistir(perde metade da aposta).\n");
+        menu.append("4 - Desistir(perde metade da aposta).");
 
         System.out.println(menu.toString());
 
