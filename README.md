@@ -33,16 +33,16 @@ git clone https://github.com/isaclds/Blackjack-project.git
 cd Blackjack-project
 ```
 
-3. ### Escolha uma das opções a baixo para executar:
+3. Escolha uma das opções a baixo para executar:
 
-1. Compilar e executar manualmente (garantindo que esteja usando UTF-8)
+- Compilar e executar manualmente (garantindo que esteja usando UTF-8)
 
 ```
 javac -encoding UTF-8 -d bin src\*.java
 java -cp bin Project
 ```
 
-2. Usar o script run.sh (Linux/macOS)
+- Usar o script run.sh (Linux/macOS)
 
 ```
 cd script
@@ -50,7 +50,7 @@ chmod +x run.sh  # Dar permissão de execução
 ./run.sh
 ```
 
-3. Usar o arquivo run.bat (Windows)
+- Usar o arquivo run.bat (Windows)
 
 ```
 cd script
