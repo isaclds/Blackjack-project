@@ -143,8 +143,10 @@ public class Project {
                 //Verifica se alguém estourou os pontos ou igualou 21 e puxa a função 
                 if((pontosDealer >= 21) || (pontosJogador >= 21)){
                     comparadorDecisor();
-                }
-                if(pontosJogador < 21 && pontosDealer < 21){
+                }else if((pontosDealer>=17) && (pontosJogador>pontosDealer)){
+                    //Dealer não irá mais comprar cartas pq já tem 17 pontos ou mais e o jogador já tem mais pontos que ele, não faz sentido dar mais opções de continuidade
+                    comparadorDecisor();
+                } else if(pontosJogador < 21 && pontosDealer < 21){
                     //Se ninguém estourou os pontos, chama a função de decisão novamente
                     decisaoRodada(mJogador, mDealer);
                 }
