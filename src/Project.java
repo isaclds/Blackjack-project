@@ -34,10 +34,19 @@ public class Project {
             //Switch case para iniciar o loop principal
             switch (escolha) {
             case 1 ->{ 
-              System.out.println("Insira o valor da sua banca!");
-              banca = scan.nextDouble();
-              bancaComp = banca;
-              continuarJogando = true;
+                //Verficar se a banca é válida 
+                boolean bancaValida = false;
+                while(!bancaValida) {
+                    System.out.println("Insira o valor da sua banca!");
+                    banca = scan.nextDouble();
+                    bancaComp = banca;
+                    if(banca<=0){
+                        System.out.println("O valor da banca deve ser positivo!");
+                    } else {
+                        bancaValida = true;
+                    }
+                }
+                continuarJogando = true;
                 //Enquanto o jogador quiser continuar jogando, o jogo roda
                 while(continuarJogando){
                     rodada();
@@ -63,6 +72,12 @@ public class Project {
     }
 
     private static void rodada(){
+        //Verificando se a banca é diferente de zero para iniciar rodada
+        if(banca <= 0){
+            continuarJogo();
+            return;
+        }
+
         //Cria um baralho novo a cada rodada e o embaralha
         baralho = new Baralho();
         baralho.embaralhar();
@@ -312,17 +327,32 @@ public class Project {
     }
 
     private static void continuarJogo(){
-         System.out.println("Deseja continuar jogando? \n 1 - Sim\n 2 - Não");
+        if(banca <= 0) {
+            System.out.println("Sua banca está zerada! Quer continuar jogando? \n 1 - Sim \n 2 - Não");
+            int choise = scan.nextInt();
+            scan.nextLine();
+            switch(choise){
+                case 1 ->{
+                    //Caso a banca esteja zerada jogador pode inserir valor da nova banca
+                    System.out.println("Insira o valor da nova banca!");
+                    banca = scan.nextDouble();
+                    scan.nextLine();
+                } 
+                case 2 ->{
+                    continuarJogando = false;
+                } 
+                default ->{
+                    System.out.println("Opção inválida! Tente novamente.");
+                    continuarJogo();
+                }
+            }
+        } else {
+            System.out.println("Deseja continuar jogando? \n 1 - Sim\n 2 - Não");
             int escolha = scan.nextInt();
             scan.nextLine();
             switch(escolha){
                 case 1 -> {
-                    if(banca <= 0) {
-                        System.out.println("Sua banca está zerada. O jogo acabou!");
-                         continuarJogando = false;
-                } else {
                     System.out.printf("Sua banca atual é de R$: %.2f!\n", banca);
-                }
                 }
                 case 2 -> {
                     continuarJogando = false;
@@ -332,6 +362,7 @@ public class Project {
                     continuarJogo();
                 }
             }
+        }
     }
 
 //Situações de pontos
