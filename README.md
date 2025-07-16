@@ -1,39 +1,36 @@
-<<<<<<< HEAD
-## Getting Started
+#Blackjack (21) - Java Terminal game
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+Jogo de **Blackjack** desenvolvido em **Java**, utilizando progamação orientada a objeto (POO) e lógica de jogo interativa no terminal para facilitar a interação. Projeto produzido durante a 1° fase do curso de Análise e Desenvolvimento de Sistemas no IFSC, para a matéria de Pensamento Computacional e Algoritmos, sob orientação do Professor @rmayormartins.
 
-## Folder Structure
+## Funcionalidades 
 
-The workspace contains two folders by default, where:
+-**Sistema de Apostas** -  Gerencie suas fichas e aposte contra o dealer.
+-**Regras Clássicas do Blackjack** - Hit, stand, double down, surrender.
+-**Contagem automática dos pontos** - Ás vale 1 ou 11 conforme a jogada.
+-**Lógica do Dealer** - Dealer compra cartas até atingir 17+ pontos.
+-**Interface simples no terminal** - Sem depedências externas(futuramente implementarei uma interface gráfica).
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+## Tecnologias e Conceitos Utilizados
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+-**Java(JDK 14+)** 
+-**Progamação Orientada a Objetos** - Classes `Baralho`, `Carta`, `Project`, encapsulamento.
+-**Collections** - Uso de `ArrayList` para gerenciamento do baralho, mão do jogador e do dealer, `HashMap` para setar valores númericos a J, Q, K, A.
+-**Terminal Interativo** - Entrada/saída via `Scanner` e `System.out`.
+-**Lógica do jogo** - Calculo de pontos, lógica do dealer, fluxo de controle com switch-case e loops para gerenciar as rodadas.
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+## Como executar
 
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
-=======
-## Getting Started
-
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
-
-## Folder Structure
-
-The workspace contains two folders by default, where:
-
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
-
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
->>>>>>> 9cb3c789dbc8732cad118cf98daf4a8ff6ba192a
+1. Certifique-se de ter o Java instalado (JDK 14+)
+```
+java --version
+```
+2. Clone o repositório
+```
+git clone https://github.com/isaclds/Blackjack-project.git
+cd Blackjack-project
+```
+3. Compile e execute no terminal
+```
+javac *.java
+java Project
+```
