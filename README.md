@@ -2,6 +2,12 @@
 
 Jogo de **Blackjack** desenvolvido em **Java**, utilizando progamação orientada a objeto (POO) e lógica de jogo interativa no terminal para facilitar a interação. Projeto produzido durante a 1° fase do curso de Análise e Desenvolvimento de Sistemas no IFSC, para a matéria de Pensamento Computacional e Algoritmos, sob orientação do Doutor e Professor [Ramon Mayor Martins](https://github.com/rmayormartins).
 
+## Regras do Jogo
+
+As regras utilizadas nesse projeto foram adptadas a partir da explicação disponível nesse [site](https://pt.wikipedia.org/wiki/Blackjack). Se você não está familiarizado(a) com o jogo ou quer entender melhor as mecânicas, recomendo acessar o link para conferir as regras detalhadas antes de começar!
+> [!NOTE]
+> Este projeto é uma implementação pessoal com base nas regras disponíveis online. Qualquer dúvida sobre as regras oficiais, consulte a fonte original.
+
 ## Funcionalidades
 
 - **Sistema de Apostas** - Gerencie suas fichas e aposte contra o dealer.
