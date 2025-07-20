@@ -148,7 +148,7 @@ public class Project {
                         comprarCarta(maoDealer);
                         pontosDealer = calculadoraPontos(maoDealer);
                         //Mostra a carta que o dealer comprou
-                        int indexD = mDealer.size() - 1;
+                        int indexD = maoDealer.size() - 1;
                         System.out.printf("O dealer agora tem %s, totalizando %d pontos\n", maoDealer.get(indexD), pontosDealer);
                     }
                     comprarCarta(maoJogador);
@@ -170,7 +170,7 @@ public class Project {
                     }
                 }
                 case 2 ->{
-                    if(dobrou || mJogador.size() != 2){
+                    if(dobrou || maoJogador.size() != 2){
                         System.out.println("Você só pode dobrar na primeira rodada!");
                         //Chama a decisao novamente
                     } else if(0 > (banca -= aposta)){
