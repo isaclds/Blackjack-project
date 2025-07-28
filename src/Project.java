@@ -40,6 +40,8 @@ public class Project {
                         escolhaValida = true;
                         //Verficar se a banca é válida 
                         boolean bancaValida = false;
+                        //Cria o baralho
+                        baralho = new Baralho();
                         while(!bancaValida) {
                             System.out.println("Insira o valor da sua banca!");
                             banca = scan.nextDouble();
@@ -82,9 +84,19 @@ public class Project {
             return;
         }
 
-        //Cria um baralho novo a cada rodada e o embaralha
-        baralho = new Baralho();
-        baralho.embaralhar();
+        //Quantidade de cartas de um baralho de blackjack com 6 baralhos 
+        int tamanhoBaralhoInicial = 312;
+
+        //Verifica a quantidade de cartas presentes no baralho para criação do mesmo ou embaralha-lo novamente
+        if(baralho.quantidadeDeCartas() == 0){
+            criarBaralhoGrande();
+        } else if(baralho.quantidadeDeCartas() < tamanhoBaralhoInicial/2) {
+            baralho.limparBaralho();
+            criarBaralhoGrande();
+            System.out.println("Todas as cartas voltaram ao baralho e ele foi embaralhado novamente!");
+        }
+        
+        //Criação das mãos
         List<Carta> maoJogador = new ArrayList<>();
         List<Carta> maoDealer = new ArrayList<>();
 
@@ -96,6 +108,7 @@ public class Project {
         //Valor da aposta sempre setado em 0 no inicio da função para evitar futuros bugs de apostas não zeradas
         aposta = 0;
         aposta = apostar();
+
         //Ao apostar o valor da aposta já é retirado da banca
         banca -= aposta;
 
@@ -379,6 +392,15 @@ public class Project {
                 }
             }
         }
+    }
+
+    //Criação do baralho
+    private static void criarBaralhoGrande(){
+         //Criar 6 baralhos como seria em um cassino, blackjack com 6 ou 8 baralhos
+        for (int i = 0; i < 6; i++) {
+            baralho.criarBaralho();
+        }
+        baralho.embaralhar();
     }
 
 //Situações de pontos

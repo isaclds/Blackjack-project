@@ -11,11 +11,9 @@ public class Baralho {
     public Baralho() {
       //Variavel cartas vira uma arraylist que irá armazenar as cartas do baralho
         cartas = new ArrayList<>();
-        //Cria o bardistribuirCartaalho chamando a função criarBaralho
-        criarBaralho();
     }
 
-  private void criarBaralho() {
+  public void criarBaralho() {
     //Cria um array para os valores e os naipes
     String[] naipes = {"ouros", "espadas", "copas", "paus"};
     String[] valores = {"2","3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
@@ -27,7 +25,16 @@ public class Baralho {
       }
     }
   }
-public void mostrarCartas() {
+  
+  public int quantidadeDeCartas() {
+    return cartas.size();
+  }
+
+  public void limparBaralho() {
+    cartas.clear();
+  }
+
+  public void mostrarCartas() {
     //Exibe as cartas do baralho, utilizando o método toString da classe Carta
     for (Carta carta : cartas) {
       System.out.println(carta);
@@ -38,13 +45,13 @@ public void mostrarCartas() {
         Collections.shuffle(cartas);
     }
 
-//Distribuir as cartas
+  //Distribuir as cartas
   public Carta selecionarCarta() {
     if (cartas.isEmpty()) {
         throw new IllegalStateException("O baralho está vazio!");
     }
     //Remove a carta e mostra ela
     return cartas.remove(0); 
-}
+  }
 
 }
