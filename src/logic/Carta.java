@@ -1,3 +1,5 @@
+package logic;
+
 public class Carta {
 // Declara os atributos da classe Carta, que são o valor e o naipe da carta
     private final String valor;
