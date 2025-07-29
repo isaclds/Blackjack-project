@@ -28,8 +28,12 @@ public class App extends JFrame {
       Color vermelho = new Color(209, 0, 0);
 
     //Declaração dos elementos
-      //Label's
+      //Label
         JLabel titulo = new JLabel("Bem vindo ao Blackjack!", SwingConstants.CENTER);
+        JLabel banca = new JLabel("Insira sua Banca:", SwingConstants.CENTER);
+
+      //Text Field
+        JTextField inBancaText = new JTextField();
 
       //Botões
         //Inicias
@@ -47,7 +51,19 @@ public class App extends JFrame {
           JButton btnDesistir = new JButton("Desistir");
 
     //Ação dos botões
+    btnJogar.addActionListener(e -> {
+      //Remove o botão jogar
+      remove(btnJogar);
 
+      //Adiciona os novos elementos
+      add(banca);
+      banca.add(btnBanca);
+      banca.add(inBancaText);
+
+      //Atualiza a tela
+      revalidate();
+      repaint();
+    });
 
     //Caracteristicas dos elementos
       getContentPane().setBackground(verdeEscuro);
