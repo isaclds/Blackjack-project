@@ -1,10 +1,7 @@
 package gui;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
+import java.awt.event.WindowEvent;
 import javax.swing.*;
 
 public class App extends JFrame {
@@ -16,7 +13,7 @@ public class App extends JFrame {
     GridBagConstraints gbc = new GridBagConstraints();
 
     //Configuração padrão
-      gbc.insets = new Insets(10, 10, 10, 10); //Margens
+      gbc.insets = new Insets(5, 5, 0, 5); //Margens
       gbc.fill = GridBagConstraints.HORIZONTAL; //Preenche o tamanho dos elementos horizontalmente
 
     //Fontes  
@@ -30,19 +27,19 @@ public class App extends JFrame {
     //Declaração dos elementos
       //Label
         JLabel titulo = new JLabel("Bem vindo ao Blackjack!", SwingConstants.CENTER);
-        JLabel banca = new JLabel("Insira sua Banca:", SwingConstants.CENTER);
+        JLabel banca = new JLabel("Insira sua Banca:");
 
       //Text Field
         JTextField inBancaText = new JTextField();
 
       //Botões
         //Inicias
-          JButton btnJogar = new JButton("Jogar");
-          JButton btnSair = new JButton("Sair");
+          JButton btnJogar = new JButton("Jogar"); //Feito
+          JButton btnSair = new JButton("Sair"); //Feito
 
-          //Botões nvolvendo dinheiro
-          JButton btnBanca = new JButton("Inserir");
-          JButton btnAposta = new JButton("Apostar");
+          //Botões envolvendo dinheiro
+          JButton btnBanca = new JButton("Inserir"); //Fazer, quando pressionado o botão precisa pegar o valor inserido e armazenar dentro da variavel banca no project.java além de remover ele proprio e adicionar o botão aposta
+          JButton btnAposta = new JButton("Apostar"); //Criar o textfield dele, quando pressionado armazenar o valor no aposta do project.java remover ele proprio e iniciar a rodada, displaying os botões das jogadas
 
           //Botões de rodada
           JButton btnHint = new JButton("Hint");
@@ -51,18 +48,50 @@ public class App extends JFrame {
           JButton btnDesistir = new JButton("Desistir");
 
     //Ação dos botões
+    btnSair.addActionListener(e -> {
+      //Fecha a janela e encerra os processos ao apertar no botão sair
+      dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+    });
+
     btnJogar.addActionListener(e -> {
-      //Remove o botão jogar
+      //Remove o botão jogar e sair
       remove(btnJogar);
 
       //Adiciona os novos elementos
-      add(banca);
-      banca.add(btnBanca);
-      banca.add(inBancaText);
+      gbc.gridx = 0;
+      gbc.gridy = 1;
+      gbc.gridwidth = 1;
+      gbc.weightx = 0;  //Não permite expandir horizontalmente
+      gbc.anchor = GridBagConstraints.LINE_START; 
+      add(banca, gbc);
+
+      gbc.gridy = 2;
+      add(btnBanca, gbc);
+      gbc.gridy = 1;
+      add(inBancaText, gbc);
+
+      //Posicionamento do botão Sair modificadoo
+      gbc.gridx = GridBagConstraints.RELATIVE;
+      gbc.gridx = GridBagConstraints.RELATIVE;
+      gbc.anchor = GridBagConstraints.LAST_LINE_END;
+      add(btnSair, gbc);
 
       //Atualiza a tela
       revalidate();
       repaint();
+    });
+
+    btnBanca.addActionListener(e -> {
+      //Tirar o botão da banca, adicionar o botão da aposta
+      //Remove o proprio botão
+      remove(btnBanca);
+
+      gbc.gridx = 0;
+      gbc.gridy = 1;
+      gbc.gridwidth = 1;
+      gbc.weightx = 0;  //Não permite expandir horizontalmente
+      gbc.anchor = GridBagConstraints.LINE_START; 
+      add(btnAposta, gbc);
     });
 
     //Caracteristicas dos elementos
