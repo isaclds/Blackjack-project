@@ -34,12 +34,12 @@ public class App extends JFrame {
 
       //Botões
         //Inicias
-          JButton btnJogar = new JButton("Jogar"); //Feito
-          JButton btnSair = new JButton("Sair"); //Feito
+          JButton btnJogar = new JButton("Jogar"); 
+          JButton btnSair = new JButton("Sair"); 
 
           //Botões envolvendo dinheiro
-          JButton btnBanca = new JButton("Inserir"); //Fazer, quando pressionado o botão precisa pegar o valor inserido e armazenar dentro da variavel banca no project.java além de remover ele proprio e adicionar o botão aposta
-          JButton btnAposta = new JButton("Apostar"); //Criar o textfield dele, quando pressionado armazenar o valor no aposta do project.java remover ele proprio e iniciar a rodada, displaying os botões das jogadas
+          JButton btnBanca = new JButton("Inserir"); 
+          JButton btnAposta = new JButton("Apostar"); 
 
           //Botões de rodada
           JButton btnHint = new JButton("Hint");
@@ -48,51 +48,70 @@ public class App extends JFrame {
           JButton btnDesistir = new JButton("Desistir");
 
     //Ação dos botões
-    btnSair.addActionListener(e -> {
-      //Fecha a janela e encerra os processos ao apertar no botão sair
-      dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-    });
+      //Botão sair
+      btnSair.addActionListener(e -> {
+        //Fecha a janela e encerra os processos ao apertar no botão sair
+        dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+      });
 
-    btnJogar.addActionListener(e -> {
-      //Remove o botão jogar e sair
-      remove(btnJogar);
+      //Botão Jogar
+      btnJogar.addActionListener(e -> {
+        //Remove o botão jogar e sair
+        remove(btnJogar);
 
-      //Adiciona os novos elementos
-      gbc.gridx = 0;
-      gbc.gridy = 1;
-      gbc.gridwidth = 1;
-      gbc.weightx = 0;  //Não permite expandir horizontalmente
-      gbc.anchor = GridBagConstraints.LINE_START; 
-      add(banca, gbc);
+        //Adiciona os novos elementos
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0;  //Não permite expandir horizontalmente
+        gbc.anchor = GridBagConstraints.LINE_START; 
+        add(banca, gbc);
 
-      gbc.gridy = 2;
-      add(btnBanca, gbc);
-      gbc.gridy = 1;
-      add(inBancaText, gbc);
+        gbc.gridy = 2;
+        add(btnBanca, gbc);
+        gbc.gridy = 1;
+        add(inBancaText, gbc);
 
-      //Posicionamento do botão Sair modificadoo
-      gbc.gridx = GridBagConstraints.RELATIVE;
-      gbc.gridx = GridBagConstraints.RELATIVE;
-      gbc.anchor = GridBagConstraints.LAST_LINE_END;
-      add(btnSair, gbc);
+        //Posicionamento do botão Sair modificadoo
+        gbc.gridx = GridBagConstraints.RELATIVE;
+        gbc.gridx = GridBagConstraints.RELATIVE;
+        gbc.anchor = GridBagConstraints.LAST_LINE_END;
+        add(btnSair, gbc);
 
-      //Atualiza a tela
-      revalidate();
-      repaint();
-    });
+        //Atualiza a tela
+        revalidate();
+        repaint();
+      });
 
-    btnBanca.addActionListener(e -> {
-      //Tirar o botão da banca, adicionar o botão da aposta
-      //Remove o proprio botão
-      remove(btnBanca);
+      //Botão banca
+      btnBanca.addActionListener(e -> {
+        //Tirar o botão da banca, adicionar o botão da aposta
+        //Remove o proprio botão
+        remove(btnBanca);
+        //Guarda o que foi inserido na textField
+        String input = inBancaText.getText().trim();
 
-      gbc.gridx = 0;
-      gbc.gridy = 1;
-      gbc.gridwidth = 1;
-      gbc.weightx = 0;  //Não permite expandir horizontalmente
-      gbc.anchor = GridBagConstraints.LINE_START; 
-      add(btnAposta, gbc);
-    });
+        if(input.isEmpty()) {
+          JOptionPane.showMessageDialog(this, "Por favor insira um valor para a sua banca!");
+          return;
+        }
+
+        //Try catch para apenas ser possivel inserir números
+        try {
+          double valueBanca = Double.parseDouble(input);
+          
+        } catch (NumberFormatException ex) {
+          JOptionPane.showConfirmDialog(this, "Por favor insira um valor númerico válido!");
+        }
+
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0;  //Não permite expandir horizontalmente
+        gbc.anchor = GridBagConstraints.LINE_START; 
+        add(btnAposta, gbc);
+      });
 
     //Caracteristicas dos elementos
       getContentPane().setBackground(verdeEscuro);
