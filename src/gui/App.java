@@ -3,6 +3,7 @@ package gui;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import javax.swing.*;
+import logic.Project;
 
 public class App extends JFrame {
   public App() {
@@ -11,6 +12,8 @@ public class App extends JFrame {
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Fechar ao clicar no X
     setLayout(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();
+    //Inicializar a classe projeto
+    Project project = new Project();
 
     //Configuração padrão
       gbc.insets = new Insets(5, 5, 0, 5); //Margens
@@ -26,11 +29,14 @@ public class App extends JFrame {
 
     //Declaração dos elementos
       //Label
-        JLabel titulo = new JLabel("Bem vindo ao Blackjack!", SwingConstants.CENTER);
-        JLabel banca = new JLabel("Insira sua Banca:");
+        JLabel tituloLabel = new JLabel("Bem vindo ao Blackjack!", SwingConstants.CENTER);
+        JLabel bancaLabel = new JLabel("Insira sua Banca:");
+        JLabel apostaLabel = new JLabel("Insira sua aposta:");
+        JLabel valorAtualBancaLabel = new JLabel();
 
       //Text Field
         JTextField inBancaText = new JTextField();
+        JTextField inApostaText = new JTextField();
 
       //Botões
         //Inicias
@@ -56,27 +62,32 @@ public class App extends JFrame {
 
       //Botão Jogar
       btnJogar.addActionListener(e -> {
-        //Remove o botão jogar e sair
+        //Remove o botão jogar 
         remove(btnJogar);
+        remove(tituloLabel);
 
         //Adiciona os novos elementos
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridwidth = 1;
-        gbc.weightx = 0;  //Não permite expandir horizontalmente
-        gbc.anchor = GridBagConstraints.LINE_START; 
-        add(banca, gbc);
+        //Banca
+          gbc.gridx = 0;
+          gbc.gridy = 1;
+          gbc.anchor = GridBagConstraints.LINE_START;
+          add(bancaLabel, gbc);
 
-        gbc.gridy = 2;
-        add(btnBanca, gbc);
-        gbc.gridy = 1;
-        add(inBancaText, gbc);
+        //Banca textfield
+          gbc.gridx = 1;
+          add(inBancaText, gbc);
 
-        //Posicionamento do botão Sair modificadoo
-        gbc.gridx = GridBagConstraints.RELATIVE;
-        gbc.gridx = GridBagConstraints.RELATIVE;
-        gbc.anchor = GridBagConstraints.LAST_LINE_END;
-        add(btnSair, gbc);
+        //Btn banca
+          gbc.gridx = 0;
+          gbc.gridy = 2;
+          add(btnBanca, gbc);
+          
+
+        //Btn sair
+          gbc.gridx = 1;
+          gbc.gridy = 2;
+          gbc.anchor = GridBagConstraints.LAST_LINE_END;
+          add(btnSair, gbc);
 
         //Atualiza a tela
         revalidate();
@@ -85,12 +96,10 @@ public class App extends JFrame {
 
       //Botão banca
       btnBanca.addActionListener(e -> {
-        //Tirar o botão da banca, adicionar o botão da aposta
-        //Remove o proprio botão
-        remove(btnBanca);
         //Guarda o que foi inserido na textField
         String input = inBancaText.getText().trim();
 
+        //Verificar se está vazio
         if(input.isEmpty()) {
           JOptionPane.showMessageDialog(this, "Por favor insira um valor para a sua banca!");
           return;
@@ -98,27 +107,123 @@ public class App extends JFrame {
 
         //Try catch para apenas ser possivel inserir números
         try {
-          double valueBanca = Double.parseDouble(input);
-          
+          //Guardar a banca como variavel
+          double value = Double.parseDouble(input);
+          //Verificar se o valor é positivo e se não é extremamente pequeno
+          if(value<=1.0){
+            JOptionPane.showMessageDialog(this, "Por favor insira um número maior que zero!");
+            return;
+          }
+          //Guardar ela dentro do logic
+          project.definirBanca(value);
+          //Atualizar o valor mostrado na banca atual
+          valorAtualBancaLabel.setText("Banca Atual:" + project.getBanca());
         } catch (NumberFormatException ex) {
-          JOptionPane.showConfirmDialog(this, "Por favor insira um valor númerico válido!");
+          JOptionPane.showMessageDialog(this, "Por favor, insira um valor númerico válido!");
+          return;
         }
 
+        //Remove o proprio botão e o textField
+        remove(btnBanca);
+        remove(inBancaText);
+        remove(bancaLabel);
 
+        //Caracteristicas
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 0;
+        gbc.weighty = 0;
+        gbc.insets = new Insets(5, 5, 5, 5); // Adiciona margem
+
+        // Linha 1: Botão de aposta e campos
         gbc.gridx = 0;
         gbc.gridy = 1;
-        gbc.gridwidth = 1;
-        gbc.weightx = 0;  //Não permite expandir horizontalmente
-        gbc.anchor = GridBagConstraints.LINE_START; 
+        gbc.anchor = GridBagConstraints.LINE_START;
         add(btnAposta, gbc);
+        
+        gbc.gridx = 1;
+        add(apostaLabel, gbc);
+
+        gbc.gridx = 2;
+        add(inApostaText, gbc);
+
+        // Linha 2: Banca atual e botão sair
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.LINE_START;
+        add(valorAtualBancaLabel, gbc);
+
+        gbc.gridx = 2;
+        gbc.anchor = GridBagConstraints.LINE_END;
+        add(btnSair, gbc);
+
+
+        //Atualiza a tela
+        revalidate();
+        repaint();
+      });
+
+      //Botão aposta
+      btnAposta.addActionListener(e -> {
+        //Guarda o que foi inserido na textField
+        String input = inApostaText.getText().trim();
+
+        //Verificar se está vazio
+        if(input.isEmpty()) {
+          JOptionPane.showMessageDialog(this, "Por favor, insira um valor para a sua aposta!");
+          return;
+        }
+
+        //Try catch para apenas ser possivel inserir números
+        try {
+          //Guardar a aposta como variavel
+          double value = Double.parseDouble(input);
+
+          //Verificar se o valor é positivo e se não é maior que a banca
+          if(value < 0){
+            JOptionPane.showMessageDialog(this, "Insira um número maior que zero!");
+            return;
+          } else if (value > project.getBanca()) {
+            JOptionPane.showMessageDialog(this, "Insira uma aposta menor que a sua banca!");
+            return;
+          }
+          //Guardar ela dentro do logic
+          project.definirAposta(value);
+        } catch (NumberFormatException ex) {
+          JOptionPane.showMessageDialog(this, "Por favor insira um valor númerico válido!");
+          return;
+        }
+
+        //Remove os botões e adiciona os que tem que ser adicionados
+        remove(btnAposta);
+        remove(inApostaText);
+        remove(bancaLabel);
+        remove(apostaLabel);
+
+        //Caracteristicas
+        gbc.gridy = 3; // Posiciona na linha abaixo dos elementos existentes
+        gbc.gridx = 0; // Começa na coluna 0
+        gbc.gridwidth = 1; // Cada botão ocupa 1 célula
+
+        // Adiciona os botões em sequência
+        add(btnHint, gbc);
+        gbc.gridx++; // Move para a próxima coluna (1)
+        add(btnDouble, gbc);
+        gbc.gridx++; // Move para a próxima coluna (2)
+        add(btnHold, gbc);
+        gbc.gridx++; // Move para a próxima coluna (3)
+        add(btnDesistir, gbc);
+
+        //Atualiza a tela
+        revalidate();
+        repaint();
       });
 
     //Caracteristicas dos elementos
       getContentPane().setBackground(verdeEscuro);
 
       //Titulo
-        titulo.setFont(importantFont);
-        titulo.setForeground(Color.WHITE);
+        tituloLabel.setFont(importantFont);
+        tituloLabel.setForeground(Color.WHITE);
       //Botões
         btnJogar.setBackground(dourado);
         btnSair.setBackground(vermelho);
@@ -128,15 +233,18 @@ public class App extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
-        add(titulo, gbc);
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(tituloLabel, gbc);
 
       // Botão Jogar
         gbc.gridy = 1; 
         gbc.gridwidth = 1; 
+        gbc.anchor = GridBagConstraints.LINE_START;
         add(btnJogar, gbc);
 
       // Botão Sair
         gbc.gridx = 1; 
+        gbc.anchor = GridBagConstraints.LINE_END; 
         add(btnSair, gbc);
 
     //Finalização da janela
