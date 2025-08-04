@@ -7,13 +7,13 @@ rm -rf ../bin
 mkdir -p ../bin
 
 # Compila os arquivos .java da pasta src e salva os .class em bin
-javac -encoding UTF-8 -d ../bin ../src/logic/*.java || {
+javac -encoding UTF-8 -d ../bin ../src/terminal/*.java || {
     echo "Erro na compilação!"
     exit 1
 }
 
 # Executa o programa principal a partir da pasta bin
-java -cp ../bin logic.Project || {
+java -cp ../bin terminal.Project || {
     echo "Erro na execução!"
     exit 1
 }

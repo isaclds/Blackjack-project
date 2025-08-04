@@ -177,7 +177,6 @@ public class App extends JFrame {
         try {
           //Guardar a aposta como variavel
           double value = Double.parseDouble(input);
-
           //Verificar se o valor é positivo e se não é maior que a banca
           if(value < 0){
             JOptionPane.showMessageDialog(this, "Insira um número maior que zero!");
@@ -192,6 +191,7 @@ public class App extends JFrame {
           JOptionPane.showMessageDialog(this, "Por favor insira um valor númerico válido!");
           return;
         }
+        project.iniciarRodada();
 
         //Remove os botões e adiciona os que tem que ser adicionados
         remove(btnAposta);

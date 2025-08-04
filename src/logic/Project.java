@@ -4,15 +4,18 @@ import java.util.*;
 
 public class Project {
     //Declaração das principais variaveis do projeto e que seram acessadas em diversas das funções
-    private static Baralho baralho;
-    private static Scanner scan;
+    private Baralho baralho;
+    private Scanner scan;
     private double banca;
     private double bancaComp;
     private double aposta;
-    private static boolean dobrou;
-    private static boolean continuarJogando;
-    private static int pontosJogador;
-    private static int pontosDealer;
+    private boolean blackjack;
+    private boolean dobrou;
+    private List<Carta> maoJogador;
+    private List<Carta> maoDealer;
+    private int pontosJogador;
+    private int pontosDealer;
+   
 
     public void definirBanca(double banca){
         this.banca = banca;
@@ -30,10 +33,60 @@ public class Project {
         return aposta;
     }
 
+     public void iniciarRodada(){
+        //Jogador não fez um blackjack
+        blackjack = false;
+        criarBaralho();
+        criarMaos();
+    }
+
+    public void criarMaos(){
+        comprarCarta(maoDealer);
+        comprarCarta(maoJogador);
+        comprarCarta(maoDealer);
+        comprarCarta(maoJogador);
+    }
+
+    public void comprarCarta(List<Carta> mao){
+        mao.add(baralho.selecionarCarta());
+    }
+    
+    private void criarBaralho(){
+        // Quantidade de cartas de um baralho de blackjack com 6 baralhos 
+        int tamanhoBaralhoInicial = 312;
+
+        //Verifica a quantidade de cartas presentes no baralho para criação do mesmo ou embaralha-lo novamente
+        if(baralho.quantidadeDeCartas() == 0){
+            fazerBaralho();
+        } else if(baralho.quantidadeDeCartas() < tamanhoBaralhoInicial/2) {
+            baralho.limparBaralho();
+            fazerBaralho();
+        }
+    }
+
+    private void fazerBaralho(){
+         //Criar 6 baralhos como seria em um cassino, blackjack com 6 ou 8 baralhos
+        for (int i = 0; i < 6; i++) {
+            baralho.criarBaralho();
+        }
+        baralho.embaralhar();
+    }
+
+    private void perdeu(){
+        banca -= aposta;
+    }
+
+    private void ganhou(){
+        if(blackjack){
+            banca = banca + aposta + ( aposta * 3/2);
+        } else {
+            banca += aposta;
+        }
+    }
 }
 
 
-//     private static void loopPrincipal(){
+//     private  void loopPrincipal(){
 //         System.out.println("Você quer jogar? Selecione a opção desejada.\n 1 - Sim\n 2 - Não");
 //         int escolha = scan.nextInt();
         
@@ -93,11 +146,7 @@ public class Project {
 //             criarBaralhoGrande();
 //             System.out.println("Todas as cartas voltaram ao baralho e ele foi embaralhado novamente!");
 //         }
-        
-//         //Criação das mãos
-//         List<Carta> maoJogador = new ArrayList<>();
-//         List<Carta> maoDealer = new ArrayList<>();
-
+    
 //         //Setando caracteristicas iniciais 
 //         pontosDealer = 0;
 //         pontosJogador = 0;
@@ -108,13 +157,7 @@ public class Project {
 //         aposta = apostar();
 
 //         //Ao apostar o valor da aposta já é retirado da banca
-//         banca -= aposta;
-
-//         //Comprar carta de forma única para que na parte de decisão eu posso apenas reutilizar essa função
-//         comprarCarta(maoDealer);
-//         comprarCarta(maoJogador);
-//         comprarCarta(maoDealer);
-//         comprarCarta(maoJogador);
+//         banca -= aposta; 
 
 //         //Pega a quantidade de pontos do jogador e do Dealer
 //         pontosJogador = calculadoraPontos(maoJogador);
@@ -302,10 +345,6 @@ public class Project {
 //         return pontos;
 //     }
 
-//      private static void comprarCarta(List<Carta> mao){
-//         mao.add(baralho.selecionarCarta());
-//     }
-
 //     private static void verificarVencedorPorVU(int pontosJogador, int pontosDealer){
 //         //Ver se empatou em 21, caso sim valor da aposta volta para a banca
 //         if((pontosJogador == 21) && (pontosDealer == 21)){
@@ -370,15 +409,6 @@ public class Project {
 //                 }
 //             }
 //         }
-//     }
-
-//     //Criação do baralho
-//     private static void criarBaralhoGrande(){
-//          //Criar 6 baralhos como seria em um cassino, blackjack com 6 ou 8 baralhos
-//         for (int i = 0; i < 6; i++) {
-//             baralho.criarBaralho();
-//         }
-//         baralho.embaralhar();
 //     }
 
 // //Situações de pontos
