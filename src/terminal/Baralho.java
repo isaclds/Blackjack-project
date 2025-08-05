@@ -44,8 +44,8 @@ public class Baralho {
   }
   //Função para embaralhar as cartas do baralho, utilizando a função shuffle da classe Collections, shuffle reorganiza de forma aleatória os elementos de uma lista.	
   public void embaralhar() {
-        Collections.shuffle(cartas);
-    }
+    Collections.shuffle(cartas);
+  }
 
   //Distribuir as cartas
   public Carta selecionarCarta() {

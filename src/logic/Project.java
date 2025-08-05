@@ -15,43 +15,67 @@ public class Project {
     private List<Carta> maoDealer;
     private int pontosJogador;
     private int pontosDealer;
+    private int contador;
    
 
-    public void definirBanca(double banca){
+    public void definirBanca(double banca) {
         this.banca = banca;
     }
 
-    public double getBanca(){
+    public double getBanca() {
         return banca;
     }
 
-    public void definirAposta(double aposta){
+    public void definirAposta(double aposta) {
         this.aposta = aposta;
     }
 
-    public double getAposta(){
+    public double getAposta() {
         return aposta;
     }
 
-     public void iniciarRodada(){
+    public void iniciarJogo() {
+        baralho = new Baralho();
+        iniciarRodada();
+    }
+
+    public boolean vrdOUfalso() {
+        contador = 1 + contador;
+        return contador == 1;
+    }
+
+     public void iniciarRodada() {
         //Jogador não fez um blackjack
         blackjack = false;
+
+         //Criação das mãos
+        maoJogador = new ArrayList<>();
+        maoDealer = new ArrayList<>();
+
         criarBaralho();
         criarMaos();
     }
 
-    public void criarMaos(){
+    public List<Carta> getMaoJogador(){
+        return maoJogador;
+    }
+
+    public List<Carta> getMaoDealer(){
+        return maoDealer;
+    }
+
+    public void criarMaos() {
         comprarCarta(maoDealer);
         comprarCarta(maoJogador);
         comprarCarta(maoDealer);
         comprarCarta(maoJogador);
     }
 
-    public void comprarCarta(List<Carta> mao){
+    public void comprarCarta(List<Carta> mao) {
         mao.add(baralho.selecionarCarta());
     }
     
-    private void criarBaralho(){
+    private void criarBaralho() {
         // Quantidade de cartas de um baralho de blackjack com 6 baralhos 
         int tamanhoBaralhoInicial = 312;
 
@@ -64,7 +88,7 @@ public class Project {
         }
     }
 
-    private void fazerBaralho(){
+    private void fazerBaralho() {
          //Criar 6 baralhos como seria em um cassino, blackjack com 6 ou 8 baralhos
         for (int i = 0; i < 6; i++) {
             baralho.criarBaralho();
@@ -82,6 +106,43 @@ public class Project {
         } else {
             banca += aposta;
         }
+    }
+
+    public int calculadoraPontos(List<Carta> mao){
+        int pontos = 0;
+
+        //Classe map para atribuir valor as cartas que são letras
+        Map<String, Integer> valorCartaLetra = new HashMap<>();
+        valorCartaLetra.put("J", 10);
+        valorCartaLetra.put("Q", 10);
+        valorCartaLetra.put("K", 10);
+        valorCartaLetra.put("A", 11);
+
+        //Lop para executar a soma, pega a carta da classe carta
+        for(Carta carta : mao){
+
+            //Pega o valor da carta em forma de String
+            String valorCarta = carta.getValor();
+
+            //Testa com contaisKey para ver se ela tem o Map junto, se tem ela pega o valor que foi mapeado
+            if(valorCartaLetra.containsKey(valorCarta)){
+                pontos += valorCartaLetra.get(valorCarta);
+            } else {
+                pontos += Integer.parseInt(valorCarta);
+            }
+        }
+
+        if(pontos>21){
+            //Filtra para ver se tem algum As presente
+            int qntdAs = (int) mao.stream().filter(c -> "A".equals(c.getValor())).count();
+
+            while(pontos>21 && qntdAs > 0){
+                pontos -= 10; //Diminui o valor de As para 1 por conta que estourou a quantidade de pontos
+                qntdAs --; //Corrige a quantidade de As
+            }
+        }
+        //Retorna os pontos
+        return pontos;
     }
 }
 
@@ -308,42 +369,7 @@ public class Project {
 //         }
 //     }
 
-//     private static int calculadoraPontos(List<Carta> mao){
-//         int pontos = 0;
-
-//         //Classe map para atribuir valor as cartas que são letras
-//         Map<String, Integer> valorCartaLetra = new HashMap<>();
-//         valorCartaLetra.put("J", 10);
-//         valorCartaLetra.put("Q", 10);
-//         valorCartaLetra.put("K", 10);
-//         valorCartaLetra.put("A", 11);
-
-//         //Lop para executar a soma, pega a carta da classe carta
-//         for(Carta carta : mao){
-
-//             //Pega o valor da carta em forma de String
-//             String valorCarta = carta.getValor();
-
-//             //Testa com contaisKey para ver se ela tem o Map junto, se tem ela pega o valor que foi mapeado
-//             if(valorCartaLetra.containsKey(valorCarta)){
-//                 pontos += valorCartaLetra.get(valorCarta);
-//             } else {
-//                 pontos += Integer.parseInt(valorCarta);
-//             }
-//         }
-
-//         if(pontos>21){
-//             //Filtra para ver se tem algum As presente
-//             int qntdAs = (int) mao.stream().filter(c -> "A".equals(c.getValor())).count();
-
-//             while(pontos>21 && qntdAs > 0){
-//                 pontos -= 10; //Diminui o valor de As para 1 por conta que estourou a quantidade de pontos
-//                 qntdAs --; //Corrige a quantidade de As
-//             }
-//         }
-//         //Retorna os pontos
-//         return pontos;
-//     }
+    
 
 //     private static void verificarVencedorPorVU(int pontosJogador, int pontosDealer){
 //         //Ver se empatou em 21, caso sim valor da aposta volta para a banca

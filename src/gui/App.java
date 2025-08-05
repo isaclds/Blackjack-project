@@ -2,10 +2,16 @@ package gui;
 
 import java.awt.*;
 import java.awt.event.WindowEvent;
+import java.util.List;
 import javax.swing.*;
-import logic.Project;
+import logic.*;
 
 public class App extends JFrame {
+  private JLabel pontosJogadorLabel;
+  private JLabel pontosDealerLabel;
+  private JPanel maoDealerLabel;
+  private JPanel maoJogadorLabel;
+
   public App() {
     // Criar a janela principal e define informações importantes
     setTitle("Blackjack");
@@ -33,6 +39,8 @@ public class App extends JFrame {
         JLabel bancaLabel = new JLabel("Insira sua Banca:");
         JLabel apostaLabel = new JLabel("Insira sua aposta:");
         JLabel valorAtualBancaLabel = new JLabel();
+        pontosJogadorLabel = new JLabel("Pontos: 0");
+        pontosDealerLabel = new JLabel("Dealer: 0");
 
       //Text Field
         JTextField inBancaText = new JTextField();
@@ -144,9 +152,11 @@ public class App extends JFrame {
         add(apostaLabel, gbc);
 
         gbc.gridx = 2;
+        gbc.weighty = 1;
         add(inApostaText, gbc);
 
         // Linha 2: Banca atual e botão sair
+        gbc.weighty = 0;
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.LINE_START;
@@ -191,67 +201,142 @@ public class App extends JFrame {
           JOptionPane.showMessageDialog(this, "Por favor insira um valor númerico válido!");
           return;
         }
-        project.iniciarRodada();
-
-        //Remove os botões e adiciona os que tem que ser adicionados
+        boolean primeiraVez = project.vrdOUfalso();
+        if(primeiraVez){
+          project.iniciarJogo();
+        }
+        else {
+          project.iniciarRodada();
+        }
+    
+        // Remove componentes antigos
         remove(btnAposta);
         remove(inApostaText);
-        remove(bancaLabel);
         remove(apostaLabel);
+        remove(valorAtualBancaLabel);
+        remove(maoDealerLabel);
+        remove(maoJogadorLabel);
+        remove(pontosDealerLabel);
+        remove(pontosJogadorLabel);
 
-        //Caracteristicas
-        gbc.gridy = 3; // Posiciona na linha abaixo dos elementos existentes
-        gbc.gridx = 0; // Começa na coluna 0
-        gbc.gridwidth = 1; // Cada botão ocupa 1 célula
+        // Cria novos painéis
+        maoDealerLabel = criarPainelCartas(project.getMaoDealer());
+        maoJogadorLabel = criarPainelCartas(project.getMaoJogador());
+        
+        // Atualiza pontos
+        pontosJogadorLabel.setText("Pontos: " + project.calculadoraPontos(project.getMaoJogador()));
+        pontosDealerLabel.setText("Dealer: ?");
+        
+        // Configura labels
+        maoDealerLabel.setForeground(Color.WHITE);
+        maoJogadorLabel.setForeground(Color.WHITE);
+        pontosJogadorLabel.setForeground(Color.WHITE);
+        pontosDealerLabel.setForeground(Color.WHITE);
 
-        // Adiciona os botões em sequência
+        // Posiciona componentes
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 4;
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(maoDealerLabel, gbc);
+        
+        gbc.gridy = 1;
+        add(maoDealerLabel, gbc);
+        
+        gbc.gridy = 2;
+        add(pontosDealerLabel, gbc);
+        
+        gbc.gridy = 3;
+        add(maoJogadorLabel, gbc);
+        
+        gbc.gridy = 4;
+        add(maoJogadorLabel, gbc);
+        
+        gbc.gridy = 5;
+        add(pontosJogadorLabel, gbc);
+        
+        // Botões de ação
+        gbc.gridy = 6;
+        gbc.gridx = 0;
+        gbc.gridwidth = 1;
         add(btnHint, gbc);
-        gbc.gridx++; // Move para a próxima coluna (1)
+        
+        gbc.gridx = 1;
         add(btnDouble, gbc);
-        gbc.gridx++; // Move para a próxima coluna (2)
+        
+        gbc.gridx = 2;
         add(btnHold, gbc);
-        gbc.gridx++; // Move para a próxima coluna (3)
+        
+        gbc.gridx = 3;
         add(btnDesistir, gbc);
 
-        //Atualiza a tela
         revalidate();
         repaint();
       });
 
-    //Caracteristicas dos elementos
-      getContentPane().setBackground(verdeEscuro);
+    getContentPane().setBackground(verdeEscuro);
+    tituloLabel.setFont(importantFont);
+    tituloLabel.setForeground(Color.WHITE);
+    btnJogar.setBackground(dourado);
+    btnSair.setBackground(vermelho);
+    pontosJogadorLabel.setForeground(Color.WHITE);
+    pontosDealerLabel.setForeground(Color.WHITE);
 
-      //Titulo
-        tituloLabel.setFont(importantFont);
-        tituloLabel.setForeground(Color.WHITE);
-      //Botões
-        btnJogar.setBackground(dourado);
-        btnSair.setBackground(vermelho);
+    // Posicionamento inicial
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    gbc.gridwidth = 2;
+    gbc.anchor = GridBagConstraints.CENTER;
+    add(tituloLabel, gbc);
 
-    //Posicionamento
-      //Titulo
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        add(tituloLabel, gbc);
+    gbc.gridy = 1; 
+    gbc.gridwidth = 1; 
+    gbc.anchor = GridBagConstraints.LINE_START;
+    add(btnJogar, gbc);
 
-      // Botão Jogar
-        gbc.gridy = 1; 
-        gbc.gridwidth = 1; 
-        gbc.anchor = GridBagConstraints.LINE_START;
-        add(btnJogar, gbc);
+    gbc.gridx = 1; 
+    gbc.anchor = GridBagConstraints.LINE_END; 
+    add(btnSair, gbc);
 
-      // Botão Sair
-        gbc.gridx = 1; 
-        gbc.anchor = GridBagConstraints.LINE_END; 
-        add(btnSair, gbc);
-
-    //Finalização da janela
-    pack(); //Envolve todos os componentes
-    setLocationRelativeTo(null); //Centraliza
-    setVisible(true); //Transforma a janela para visivel 
+    // Finalização
+    pack();
+    setLocationRelativeTo(null);
+    setVisible(true);
     }
+    
+    private JPanel criarPainelCartas(List<Carta> cartas) {
+    JPanel painelCartas = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
+    painelCartas.setBackground(new Color(27, 77, 31));
+    
+    for (Carta carta : cartas) {
+      //Formatação para nome das imagens
+      String naipeIngles;
+      naipeIngles = switch (carta.getNaipe()) {
+        case "copas" -> "hearts";
+        case "ouros" -> "diamonds";
+        case "espadas" -> "spades";
+        case "paus" -> "clubs";
+        default -> carta.getNaipe();
+      };
+      //Formatação para nome das imagens
+      String valorIngles;
+      valorIngles = switch(carta.getValor()) {
+        case "J" -> "jack";
+        case "Q" -> "queen";
+        case "K" -> "king";
+        case "A" -> "ace";
+        default -> carta.getValor();
+      };
+
+      String nomeImagem = valorIngles + "_of_" + naipeIngles + ".png";
+      ImageIcon icon = new ImageIcon("src/img/" + nomeImagem);
+      JLabel cartaLabel = new JLabel(new ImageIcon(icon.getImage().getScaledInstance(80, 120, Image.SCALE_SMOOTH)));
+
+      painelCartas.add(cartaLabel);
+    }
+    
+    return painelCartas;
+  }
 
     public static void main(String[] args) {
     // Chamar o método para criar a interface na thread de eventos
